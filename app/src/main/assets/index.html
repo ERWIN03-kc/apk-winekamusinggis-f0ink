@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ERWIN — English Helper</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:linear-gradient(145deg,#f0f9ff,#e0f2fe 55%,#f8fcff);color:#123b5d;min-height:100vh}
+header{background:linear-gradient(135deg,#0284c7,#38bdf8 60%,#38bdf8);color:#fff;padding:26px 18px;text-align:center;box-shadow:0 8px 24px #0284c730}
+header h1{margin:0;font-size:26px;letter-spacing:1px}header p{margin:4px 0 0;font-size:13px;opacity:.85}
+main{max-width:680px;margin:0 auto;padding:18px} @media(max-width:480px){main{padding:13px}header{padding:20px 14px}header h1{font-size:24px}.card{padding:13px;border-radius:14px}table{font-size:12px}td,th{padding:6px 3px}.sp{padding:8px 10px}}
+.hero{background:#fff;border:1px solid #bae6fd;border-radius:18px;padding:15px;margin:0 0 14px;box-shadow:0 6px 20px #0284c70c}.hero strong{display:block;font-size:16px;color:#075985}.hero p{margin:5px 0 0;font-size:13px;color:#0284c7;line-height:1.5}.primary{background:linear-gradient(135deg,#0284c7,#38bdf8);color:white;border:0;border-radius:12px;padding:12px 15px;font-weight:700;width:100%;margin-top:10px}
+.tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.tabs button{padding:12px 8px;border:1px solid #bae6fd;border-radius:12px;background:#e0f2fe;color:#075985;font-weight:700;cursor:pointer;font-size:13px;transition:.2s}
+.tabs button.on{background:#0284c7;color:#fff;border-color:#0284c7;box-shadow:0 4px 12px #0284c730}
+input,textarea{width:100%;padding:14px;font:inherit;font-size:16px;border:2px solid #7dd3fc;border-radius:14px;outline:0;background:#fff;color:#123b5d;resize:vertical}
+input:focus,textarea:focus{border-color:#0284c7;box-shadow:0 0 0 3px #bae6fd}
+.hint{font-size:13px;color:#0284c7;margin:8px 2px}
+.card{background:#fff;border:1px solid #e0f2fe;border-radius:16px;padding:16px;margin-top:12px;box-shadow:0 5px 18px #0c4a6e10}
+.card h3{margin:2px 0 4px;font-size:20px}
+.tag{display:inline-block;font-size:11px;background:#e0f2fe;color:#0284c7;border-radius:6px;padding:2px 6px;margin-left:6px;font-weight:600}
+.sp{border:0;background:#e0f2fe;color:#0284c7;border-radius:8px;padding:7px 11px;margin:6px 6px 0 0;cursor:pointer;font-size:13px;font-weight:600}
+.lbl{font-size:12px;color:#6b7280}
+.rd{color:#0284c7;font-weight:650;margin-top:5px}
+table{border-collapse:collapse;margin-top:8px;font-size:13px;width:100%}
+td,th{border:1px solid #e0e7ff;padding:4px 6px;text-align:center}th{background:#e0f2fe;color:#075985}
+td small{display:block;color:#059669;font-size:11px}
+.empty{text-align:center;color:#6b7280;margin-top:24px}
+.ph{font-weight:700;margin-top:12px;font-size:16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0 16px}.stat{background:linear-gradient(145deg,#fff,#f0f9ff);border:1px solid #bae6fd;border-radius:14px;padding:11px 8px;text-align:center}.stat b{display:block;color:#0284c7;font-size:18px}.stat span{font-size:11px;color:#0284c7}.section-title{font-size:17px;font-weight:800;margin:18px 2px 5px;color:#0c4a6e}.subtle{font-size:12px;color:#0ea5e9}.word-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:11px 0;border-bottom:1px solid #e0f2fe}.word-row:last-child{border-bottom:0}.word-row b{display:block}.word-row small{display:block;color:#0284c7;margin-top:3px}.mini{font-size:11px;padding:5px 8px;border-radius:8px;background:#e0f2fe;color:#0284c7;border:0;font-weight:700}
+
+/* Premium refresh */
+:root{--ink:#21123b;--muted:#756786;--purple:#6d28d9;--violet:#0ea5e9;--line:#e8ddf8;--surface:#fff;--soft:#f7f2ff}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(ellipse at 10% 0%,#bae6fd 0,transparent 35%),linear-gradient(145deg,#fbfaff,#f3edff 54%,#faf7ff);color:var(--ink)}
+header{position:relative;overflow:hidden;text-align:left;padding:26px max(18px,calc((100% - 760px)/2));background:linear-gradient(120deg,#24103f 0%,#5520a5 48%,#0ea5e9 100%);box-shadow:0 12px 34px #32105d2e}
+header:after{content:"";position:absolute;width:210px;height:210px;border:1px solid #ffffff30;border-radius:50%;right:calc(max(12px,(100% - 760px)/2));top:-100px;box-shadow:0 0 0 25px #ffffff08,0 0 0 55px #ffffff06;pointer-events:none}
+header h1{font-size:29px;letter-spacing:2px;font-weight:850}header p{font-size:13px;letter-spacing:.2px;max-width:500px}
+main{max-width:760px;padding:20px 17px 36px}
+.hero{position:relative;overflow:hidden;border:1px solid #e7dcfa;border-radius:22px;padding:21px;background:linear-gradient(130deg,#fff 0%,#fbf7ff 70%,#f0e5ff 100%);box-shadow:0 14px 34px #46206d0d}
+.hero strong{font-size:19px;letter-spacing:-.3px;color:#37135e}.hero p{font-size:13px;line-height:1.65;color:#78658f}.stats{gap:10px}.stat{border-radius:15px;background:#fff;border-color:#e9def8;padding:13px 8px;box-shadow:0 5px 14px #48206a08}.stat b{font-size:17px;color:#6d28d9}.stat span{color:#78658f}
+.tabs{gap:9px;margin:16px 0}.tabs button{background:#fff;border-color:#e4d8f5;border-radius:13px;padding:13px 9px;color:#65448c;box-shadow:0 3px 10px #32105d06}.tabs button.on{background:linear-gradient(135deg,#5b21b6,#0ea5e9);border-color:transparent;box-shadow:0 7px 18px #6d28d936;color:#fff}
+input,textarea{border:1.5px solid #dfd0f3;border-radius:15px;box-shadow:0 4px 15px #30104d08}textarea:focus,input:focus{border-color:#0ea5e9;box-shadow:0 0 0 4px #0ea5e91c}
+.card{border:1px solid #e9e0f5;border-radius:18px;padding:17px;box-shadow:0 7px 22px #30104d09}.card h3{color:#2f1749;letter-spacing:-.25px}.tag{background:#f0e7ff;color:#6d28d9;border-radius:7px;padding:4px 7px}.sp,.mini{border-radius:10px;background:#f1e8ff;color:#6125a6}.primary{border-radius:13px;background:linear-gradient(135deg,#5b21b6,#0ea5e9);box-shadow:0 7px 16px #6d28d926}
+.mode-panel{border:1px solid #e5d9f7;background:#fff;border-radius:18px;padding:15px;margin:0 0 14px;box-shadow:0 7px 22px #30104d08}.status-line{display:flex;align-items:center;gap:9px;font-weight:800;font-size:14px}.status-dot{width:10px;height:10px;border-radius:50%;background:#16a34a;box-shadow:0 0 0 4px #dcfce7;flex-shrink:0}.status-dot.off{background:#d97706;box-shadow:0 0 0 4px #fef3c7}.status-copy{font-size:12px;color:#78658f;line-height:1.5;margin:7px 0 12px}.mode-choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.mode-choices button{border:1px solid #e5d9f7;border-radius:11px;background:#faf7ff;color:#634585;padding:10px 5px;font-size:12px;font-weight:750}.mode-choices button.active{background:#6d28d9;color:white;border-color:#6d28d9}.reco-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.reco{border-radius:12px;background:#f8f4ff;padding:10px;font-size:12px;color:#61487d;line-height:1.45}.reco b{display:block;color:#442066;margin-bottom:3px;font-size:13px}.status-pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;background:#f0e7ff;padding:5px 9px;font-size:11px;font-weight:800;color:#6325a7;margin-top:10px}
+@media(max-width:480px){header{padding:22px 17px}header h1{font-size:26px}main{padding:14px 12px 28px}.hero{padding:17px}.mode-choices button{font-size:11px}.reco-grid{grid-template-columns:1fr}.card{padding:14px}}
+
+.help-launch{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 15px;margin:14px 0 10px;border:1px solid #d9c5f5;border-radius:14px;background:linear-gradient(135deg,#fff,#f4eaff);color:#5b21b6;font-weight:800;font-size:14px;box-shadow:0 5px 16px #5120800d;cursor:pointer}
+.help-overlay{position:fixed;inset:0;background:#180a2dcc;z-index:9999;display:none;align-items:flex-end;justify-content:center;padding:12px}
+.help-overlay.show{display:flex}.help-modal{width:min(720px,100%);max-height:90vh;overflow:auto;background:#fcfaff;border:1px solid #e9ddfa;border-radius:22px;padding:18px;box-shadow:0 24px 70px #16072755}.help-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;position:sticky;top:-18px;background:#fcfaff;padding:4px 0 12px;z-index:1}.help-head h2{margin:0;color:#3b1764;font-size:21px}.help-close{border:0;border-radius:10px;background:#efe4ff;color:#5b21b6;font-size:20px;padding:5px 12px;font-weight:800}.help-item{background:white;border:1px solid #eadff7;border-radius:15px;padding:13px;margin:9px 0}.help-item h3{font-size:15px;margin:0 0 6px;color:#5b21b6}.help-item p{font-size:13px;line-height:1.6;color:#625273;margin:5px 0}.help-example{background:#f5efff;border-radius:9px;padding:9px 10px;font-size:13px;color:#164e63;margin-top:7px}.site-footer{text-align:center;color:#8b78a3;font-size:12px;padding:8px 10px 24px;letter-spacing:.2px}.site-footer b{color:#6d28d9}
+@media(min-width:600px){.help-overlay{align-items:center}.help-modal{max-height:85vh}}
+
+
+/* Minimal lavender neon refresh */
+:root{--neon:#7dd3fc;--neon2:#38bdf8;--neon3:#60a5fa}
+body{background:#f8f5ff;color:#25143b}
+header{background:linear-gradient(135deg,#211333,#39205b);box-shadow:none;padding-top:22px;padding-bottom:22px}
+header:after{display:none}
+header h1{letter-spacing:1px;font-size:25px}
+main{max-width:700px;padding-top:16px}
+.hero,.mode-panel,.card,.help-modal{position:relative;isolation:isolate;border:1px solid transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(110deg,#c4a0ff,#f0d9ff,#60a5fa,#bae6fd) border-box;box-shadow:0 5px 18px #6d28d90b;border-radius:16px}
+.hero{padding:17px}
+.stats{gap:8px}.stat{box-shadow:none;border-radius:12px;padding:10px 7px}
+.tabs{gap:8px}.tabs button{box-shadow:none;border-radius:11px;padding:11px 7px}
+.tabs button.on{background:#6d28d9;box-shadow:0 0 12px #38bdf855}
+.primary{box-shadow:none}
+.card{padding:14px;margin-top:10px}
+.mode-panel{padding:13px}
+.help-launch{box-shadow:none;border-radius:12px}
+.neon-frame{position:relative;border-radius:16px;isolation:isolate}
+.neon-frame:before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1.5px;background:conic-gradient(from var(--spin,0deg),transparent 0 48%,#7dd3fc 58%,#60a5fa 68%,#f0abfc 76%,transparent 88%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;animation:neonOrbit 4.5s linear infinite;filter:drop-shadow(0 0 3px #38bdf888);z-index:2}
+@keyframes neonOrbit{to{--spin:360deg}}
+@property --spin{syntax:"<angle>";initial-value:0deg;inherits:false}
+.card,.hero,.mode-panel{animation:softGlow 4s ease-in-out infinite alternate}
+@keyframes softGlow{from{box-shadow:0 3px 12px #38bdf810}to{box-shadow:0 5px 17px #38bdf822}}
+input,textarea{box-shadow:none;border-color:#ded0f2}
+input:focus,textarea:focus{box-shadow:0 0 0 3px #38bdf824}
+footer{text-align:center;color:#88779e;font-size:12px;padding:18px}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+@media(max-width:480px){header{padding:20px 15px}header h1{font-size:23px}.hero{padding:14px}.card{padding:12px}}
+
+
+/* Neon lavender refresh: thicker animated border and cleaner dashboard */
+:root{--neon-a:#bae6fd;--neon-b:#38bdf8;--neon-c:#38bdf8;--neon-d:#f0abfc}
+.neon-frame{position:relative;isolation:isolate;border:0!important;overflow:hidden}
+.neon-frame::before{content:"";position:absolute;inset:0;padding:3px;border-radius:inherit;background:conic-gradient(from var(--spin,0deg),#bae6fd,#38bdf8,#38bdf8,#f0abfc,#7dd3fc,#bae6fd);animation:neonOrbit 4s linear infinite;pointer-events:none;z-index:-2}
+.neon-frame::after{content:"";position:absolute;inset:3px;border-radius:inherit;background:var(--panel-bg,#fff);pointer-events:none;z-index:-1}
+.hero.neon-frame,.mode-panel.neon-frame,.card.neon-frame,.help-modal.neon-frame{box-shadow:0 0 8px #38bdf875,0 0 20px #38bdf838}
+.hero.neon-frame{--panel-bg:#fff}.mode-panel.neon-frame{--panel-bg:#fff}.card.neon-frame{--panel-bg:#fff}.help-modal.neon-frame{--panel-bg:#fff}
+@keyframes neonOrbit{to{--spin:360deg}}
+@property --spin{syntax:"<angle>";inherits:false;initial-value:0deg}
+#autoDashboard{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 14px}
+.dash-tile{position:relative;min-width:0;background:rgba(255,255,255,.92);border:1px solid #bae6fd;border-radius:15px;padding:13px;box-shadow:0 4px 14px #0284c70c;overflow:hidden}
+.dash-label{font-size:11px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:#0ea5e9;margin-bottom:5px}
+.dash-value{font-size:clamp(16px,4vw,21px);font-weight:800;line-height:1.25;color:#164e63;overflow-wrap:anywhere}
+.dash-sub{font-size:12px;color:#0ea5e9;margin-top:4px;line-height:1.4}
+#weatherRefresh{border:1px solid #7dd3fc;background:#f0f9ff;color:#0284c7;border-radius:9px;padding:6px 9px;font-weight:700;margin-top:8px;font-size:12px}
+@media(max-width:380px){#autoDashboard{gap:8px}.dash-tile{padding:10px}.dash-value{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.neon-frame::before{animation:none}}
+
+
+/* OCEAN BLUE CLEAN REFRESH */
+:root{color-scheme:light;--ocean:#0284c7;--sky:#38bdf8;--ice:#bae6fd;--ink:#123b5d;--soft:#f0f9ff}
+body{background:linear-gradient(160deg,#f8fcff 0%,#e0f2fe 48%,#f0f9ff 100%)!important;color:var(--ink)!important}
+header{background:linear-gradient(120deg,#075985,#0284c7 55%,#38bdf8)!important;box-shadow:0 8px 24px #0284c722!important;padding:22px 16px!important}
+header h1{letter-spacing:.3px;margin:0;font-size:clamp(1.35rem,5vw,2rem)}
+header p{margin:6px 0 0;font-size:.9rem;opacity:.9}
+main{width:min(100% - 24px,760px)!important;margin:18px auto!important;gap:12px}
+#autoDashboard{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 12px}
+.dash-tile{padding:13px!important;border-radius:16px!important;background:#ffffffed!important;border:1px solid #bae6fd!important;box-shadow:0 4px 14px #0369a111!important;min-width:0}
+.dash-label{font-size:.78rem!important;color:#0369a1!important;font-weight:700}
+.dash-value{font-size:clamp(1rem,4vw,1.25rem)!important;font-weight:800;color:#075985!important;overflow-wrap:anywhere}
+.dash-sub{font-size:.75rem!important;color:#52758c!important}
+#weatherRefresh{padding:7px 10px!important;font-size:.78rem!important;margin-top:6px}
+.hero,.mode-panel,.card,.help-modal,.reco,.stat{background:#ffffff!important;color:#123b5d!important;border:1px solid #bae6fd!important;border-radius:17px!important;box-shadow:0 5px 18px #0369a110!important}
+.hero{padding:17px!important;margin:0 0 12px!important}
+.hero strong{font-size:1.1rem!important;color:#075985!important}
+.hero p{font-size:.88rem!important;line-height:1.45!important;margin:7px 0!important;color:#42677e!important}
+.stats{gap:8px!important;margin-top:12px!important}
+.stat{padding:9px!important}
+.stat b{color:#0284c7!important}
+.mode-panel{padding:15px!important;margin-bottom:12px!important}
+.status-copy{font-size:.82rem!important;color:#52758c!important;margin:5px 0 10px!important}
+.reco-grid{gap:8px!important;margin-top:10px!important}
+.reco{padding:10px!important;font-size:.8rem!important;line-height:1.4!important}
+.reco b{display:block;color:#0369a1!important;margin-bottom:3px}
+button,.primary{background:#0284c7!important;color:white!important;border:1px solid #0284c7!important;border-radius:11px!important;box-shadow:none!important}
+button:hover,.primary:hover{background:#0369a1!important}
+.mode-choices button.active,.tabs button.on{background:#075985!important;color:#fff!important}
+.help-launch{width:100%;margin:0 0 12px!important;padding:12px!important}
+.tabs{display:flex!important;flex-wrap:wrap!important;gap:7px!important;margin:0 0 10px!important}
+.tabs button{flex:1 1 110px!important;padding:10px 8px!important;font-size:.85rem!important}
+textarea,input,select{border:1px solid #7dd3fc!important;border-radius:12px!important;background:#fff!important;color:#123b5d!important;padding:12px!important}
+textarea:focus,input:focus,select:focus{outline:2px solid #38bdf8!important;outline-offset:1px}
+.card{padding:15px!important;margin:12px 0!important}
+.card h3{color:#075985!important;margin-top:0}
+.lbl,.rd,.hint,.subtle{color:#52758c!important}
+.ph,.help-example{background:#f0f9ff!important;border:1px solid #bae6fd!important;border-radius:10px!important;padding:9px!important}
+.help-modal{max-width:620px!important}
+.help-head{border-bottom:1px solid #dbeafe!important}
+.help-item{padding:12px 0!important;border-bottom:1px solid #e0f2fe!important}
+.site-footer{color:#52758c!important;text-align:center;padding:18px 12px!important;font-size:.82rem!important}
+.neon-frame{position:relative!important;isolation:isolate!important;border:1px solid transparent!important}
+.neon-frame::before{content:"";position:absolute;inset:-2px;border-radius:inherit;padding:3px;background:conic-gradient(from var(--spin,0deg),#bae6fd,#38bdf8,#0284c7,#7dd3fc,#bae6fd);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;z-index:-1;opacity:.95;animation:neonOrbit 4s linear infinite;pointer-events:none}
+@keyframes neonOrbit{to{--spin:360deg}}
+@media(max-width:420px){main{width:calc(100% - 18px)!important}#autoDashboard{gap:8px}.dash-tile{padding:10px!important}.hero,.mode-panel{padding:13px!important}.reco-grid{grid-template-columns:1fr!important}}
+@media(prefers-reduced-motion:reduce){.neon-frame::before{animation:none}}
+
+/* FIX: theme menu always visible on mobile + full animated neon border */
+header{position:relative!important;overflow:visible!important}
+.theme-open{position:absolute!important;top:14px!important;right:12px!important;z-index:10001!important;display:block!important;max-width:46vw;white-space:nowrap}
+.theme-panel{position:fixed!important;top:76px!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:min(420px,calc(100vw - 24px))!important;max-height:calc(100dvh - 92px)!important;overflow-y:auto!important;z-index:10000!important;box-shadow:0 16px 50px #082f4970!important}
+.theme-panel[hidden]{display:none!important}
+.theme-panel-head{position:sticky;top:-14px;background:var(--theme-panel,#fff);padding:5px 0 10px;z-index:2}
+.neon-frame{position:relative!important;isolation:isolate!important;overflow:visible!important;border:0!important}
+.neon-frame::before{content:""!important;position:absolute!important;inset:0!important;padding:4px!important;border-radius:inherit!important;background:conic-gradient(from var(--spin,0deg),var(--neon-a,#7dd3fc) 0deg,var(--neon-b,#38bdf8) 70deg,transparent 115deg,var(--neon-c,#0284c7) 180deg,var(--neon-a,#7dd3fc) 250deg,var(--neon-b,#38bdf8) 320deg,var(--neon-a,#7dd3fc) 360deg)!important;-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0)!important;-webkit-mask-composite:xor!important;mask-composite:exclude!important;pointer-events:none!important;z-index:5!important;opacity:1!important;animation:neonOrbit 2.2s linear infinite!important;filter:drop-shadow(0 0 5px var(--neon-glow,#38bdf8)) drop-shadow(0 0 12px var(--neon-glow,#38bdf8))!important}
+.neon-frame::after{content:none!important}
+.hero.neon-frame,.mode-panel.neon-frame,.card.neon-frame,.help-modal.neon-frame,.dash-tile.neon-frame{box-shadow:0 0 8px var(--neon-glow,#38bdf8),0 0 18px color-mix(in srgb,var(--neon-glow,#38bdf8) 40%,transparent)!important}
+@keyframes neonOrbit{to{--spin:360deg}}
+@media(max-width:480px){header{padding-top:60px!important}.theme-open{top:12px!important;right:12px!important}.theme-panel{top:72px!important;max-height:calc(100dvh - 84px)!important}.theme-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(prefers-reduced-motion:reduce){.neon-frame::before{animation:neonOrbit 8s linear infinite!important}}
+
+</style></head><body>
+<header><button id="themeOpen" class="theme-open" type="button" aria-expanded="false" aria-controls="themePanel">🎨 Ganti Warna</button><h1>ERWIN <span style="font-weight:500;opacity:.75">/ ENGLISH HELPER</span></h1><p>Kamus Inggris–Indonesia</p>
+<section id="themePanel" class="theme-panel" hidden aria-label="Pilih tema warna">
+  <div class="theme-panel-head"><strong>Pilih Warna Tema</strong><button id="themeClose" type="button" class="theme-close" aria-label="Tutup">✕</button></div>
+  <div id="themeGrid" class="theme-grid"></div>
+  <div class="neon-color-section">
+    <strong>💡 Ganti Warna Lampu Neon</strong>
+    <p style="margin:6px 0 10px;font-size:12px">Pilih warna cahaya neon secara terpisah dari warna tema.</p>
+    <div id="neonColorGrid" class="theme-grid neon-color-grid"></div>
+  </div>
+  <button id="neonReset" class="neon-reset" type="button">↻ Kembali Neon</button>
+</section></header>
+<main>
+<section id="autoDashboard" aria-label="Informasi otomatis">
+  <div class="dash-tile neon-frame"><div class="dash-label">📅 Tanggal & hari</div><div id="dashDate" class="dash-value">Memuat tanggal…</div><div id="dashDay" class="dash-sub">Hari ini</div></div>
+  <div class="dash-tile neon-frame"><div class="dash-label">🕒 Jam lokal</div><div id="dashClock" class="dash-value">--:--:--</div><div class="dash-sub">Waktu perangkat</div></div>
+  <div class="dash-tile neon-frame"><div class="dash-label">🌤️ Waktu hari</div><div id="dashPeriod" class="dash-value">Mendeteksi…</div><div id="dashGreeting" class="dash-sub">Otomatis</div></div>
+  <div class="dash-tile neon-frame"><div class="dash-label">🌦️ Cuaca</div><div id="dashWeather" class="dash-value">Memeriksa…</div><div id="dashWeatherDetail" class="dash-sub">Perlu internet + izin lokasi</div><button id="weatherRefresh" type="button">Perbarui cuaca</button></div>
+</section>
+<div class="hero"><strong>Belajar Bahasa Inggris</strong><p>Kosakata • Frasa • Kata kerja</p><div class="stats"><div class="stat"><b>ABC</b><span>Kosakata</span></div><div class="stat"><b>V1–V3</b><span>Kata kerja</span></div><div class="stat"><b>OFF</b><span>Mode offline</span></div></div></div>
+<section class="mode-panel" aria-live="polite">
+<div class="status-line"><span id="statusDot" class="status-dot"></span><span id="statusTitle">Memeriksa koneksi…</span></div>
+<div id="statusCopy" class="status-copy">Status koneksi</div>
+<div class="mode-choices" role="group" aria-label="Pilihan mode koneksi">
+<button id="netAuto" class="active" onclick="setNetMode('auto')">✨ Otomatis</button>
+<button id="netOnline" onclick="setNetMode('online')">🌐 Online</button>
+<button id="netOffline" onclick="setNetMode('offline')">📴 Offline</button>
+</div>
+<div id="netRecommendations" class="reco-grid"><div class="reco"><b>📚 Offline</b>Kamus tersimpan di aplikasi.</div><div class="reco"><b>🌐 Online</b>Terjemahan membutuhkan internet.</div></div>
+<div id="appKind" class="status-pill">Mendeteksi cara membuka…</div>
+</section>
+<button class="help-launch" type="button" onclick="openHowTo()">📖 Cara Memakai</button>
+<div class="tabs">
+<button id="t0" class="on" onclick="tab(0)">EN → ID</button>
+<button id="t1" onclick="tab(1)">ID → EN</button>
+<button id="t2" onclick="tab(2)">Frasa & Kata Kerja</button><button id="t3" onclick="tab(3)">✨ Buat Kalimat</button><button id="t4" onclick="tab(4)">📚 Kosakata</button>
+</div>
+<textarea id="q" rows="2" placeholder="Ketik kata atau kalimat..." oninput="cari()" autocomplete="off"></textarea>
+<div class="hint" id="hint"></div>
+<div id="out"></div>
+<p class="hint">Kamus offline tersedia. Terjemahan kalimat lengkap memerlukan koneksi.</p>
+</main>
+<div id="howToOverlay" class="help-overlay" role="dialog" aria-modal="true" aria-labelledby="howToTitle" onclick="if(event.target===this)closeHowTo()">
+  <div class="help-modal">
+    <div class="help-head"><div><h2 id="howToTitle">📖 Cara Memakai ERWIN</h2><p class="subtle" style="margin:5px 0 0">Panduan singkat untuk setiap menu</p></div><button class="help-close" type="button" aria-label="Tutup panduan" onclick="closeHowTo()">×</button></div>
+    <div class="help-item"><h3>1. EN → ID 🇬🇧➡️🇮🇩</h3><p>Untuk mencari arti kata atau kalimat bahasa Inggris dalam bahasa Indonesia. Pilih menu ini, ketik bahasa Inggris, lalu lihat arti dan cara bacanya.</p><div class="help-example"><b>Contoh:</b> <i>beautiful</i> → cantik<br><i>Good morning</i> → Selamat pagi</div></div>
+    <div class="help-item"><h3>2. ID → EN 🇮🇩➡️🇬🇧</h3><p>Untuk menerjemahkan kata atau kalimat bahasa Indonesia ke bahasa Inggris. Tulis kalimat yang ingin diterjemahkan, lalu tunggu hasilnya. Saat online, aplikasi mencoba layanan terjemahan internet; saat offline, aplikasi memakai pola dan data lokal yang tersedia.</p><div class="help-example"><b>Contoh:</b> Saya kemarin pergi ke sekolah → <i>I went to school yesterday.</i></div></div>
+    <div class="help-item"><h3>3. Frasa & Kata Kerja 🧩</h3><p>Untuk mencari ungkapan yang sering dipakai dan mempelajari perubahan kata kerja. Masukkan frasa Indonesia atau kata kerja yang ingin dicari. Jika data kata kerjanya tersedia, hasil dapat menampilkan V1, V2, V3, V-ing serta jenis regular/irregular.</p><div class="help-example"><b>Contoh frasa:</b> terima kasih → <i>thank you</i><br><b>Contoh kata kerja:</b> go — went — gone — going (irregular verb)</div></div>
+    <div class="help-item"><h3>4. Buat Kalimat ✍️</h3><p>Untuk latihan mengubah kalimat Indonesia menjadi bahasa Inggris. Ketik kalimat yang utuh supaya waktu dan kegiatannya lebih jelas. Hasil offline hanya tersedia untuk kata dan pola yang sudah dikenali.</p><div class="help-example"><b>Contoh:</b><br>Saya belajar hari ini → <i>I study today.</i><br>Saya akan makan besok → <i>I will eat tomorrow.</i></div></div>
+    <div class="help-item"><h3>5. Kosakata 📚</h3><p>Untuk belajar kata satu per satu, termasuk kata benda, kata kerja, kata sifat, dan keterangan waktu. Ketik kata dalam bahasa Inggris atau Indonesia. Gunakan tombol suara jika ingin mendengar pelafalan dan jika mesin suara HP mendukungnya.</p><div class="help-example"><b>Contoh:</b><br>school → sekolah<br>yesterday → kemarin<br>beautiful → cantik<br>study → belajar</div></div>
+    <div class="help-item"><h3>🌐 Mode Online & Offline</h3><p><b>Otomatis:</b> mengikuti status jaringan perangkat. <b>Online:</b> mencoba layanan terjemahan internet. <b>Offline:</b> memakai kamus dan pola yang tersimpan di aplikasi.</p><p>Kalau sedang di sekolah tanpa paket internet, pilih Offline. Kamus, frasa, dan pola kalimat lokal tetap bisa dipakai, tetapi tidak semua kalimat bebas tersedia. Status online juga tidak menjamin layanan penerjemah bisa diakses jika server sedang bermasalah.</p></div>
+    <button class="primary" type="button" onclick="closeHowTo()">Mengerti, mulai belajar 💙</button>
+  </div>
+</div>
+<footer class="site-footer">Belajar sedikit demi sedikit, setiap hari. <br><b>©ERWIN</b> · ERWIN English Helper</footer>
+<script>
+function openHowTo(){const el=document.getElementById('howToOverlay');el.classList.add('show');document.body.style.overflow='hidden';}
+function closeHowTo(){const el=document.getElementById('howToOverlay');el.classList.remove('show');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeHowTo();});
+const W=`go|pergi|v|went|gone
+come|datang|v|came|come
+leave|meninggalkan|v|left|left
+enter|masuk|v|entered|entered
+eat|makan|v|ate|eaten
+drink|minum|v|drank|drunk
+sleep|tidur|v|slept|slept
+wake up|bangun|v|woke up|woken up
+read|membaca|v|read|read
+write|menulis|v|wrote|written
+speak|berbicara|v|spoke|spoken
+listen|mendengarkan|v|listened|listened
+watch|menonton|v|watched|watched
+see|melihat|v|saw|seen
+look|memandang|v|looked|looked
+buy|membeli|v|bought|bought
+sell|menjual|v|sold|sold
+give|memberi|v|gave|given
+take|mengambil, membawa|v|took|taken
+bring|membawa|v|brought|brought
+make|membuat|v|made|made
+do|melakukan, mengerjakan|v|did|done
+have|memiliki, makan|v|had|had
+get|mendapatkan, menjadi|v|got|got
+study|belajar|v|studied|studied
+learn|mempelajari|v|learned|learned
+teach|mengajar|v|taught|taught
+work|bekerja|v|worked|worked
+play|bermain|v|played|played
+run|berlari|v|ran|run
+walk|berjalan|v|walked|walked
+swim|berenang|v|swam|swum
+sing|bernyanyi|v|sang|sung
+sit|duduk|v|sat|sat
+stand|berdiri|v|stood|stood
+open|membuka|v|opened|opened
+close|menutup|v|closed|closed
+help|membantu, menolong|v|helped|helped
+ask|bertanya|v|asked|asked
+answer|menjawab|v|answered|answered
+think|berpikir|v|thought|thought
+know|mengetahui, mengenal|v|knew|known
+understand|mengerti|v|understood|understood
+forget|lupa|v|forgot|forgotten
+remember|mengingat|v|remembered|remembered
+meet|bertemu|v|met|met
+start|memulai|v|started|started
+begin|mulai|v|began|begun
+finish|menyelesaikan|v|finished|finished
+wash|mencuci|v|washed|washed
+clean|membersihkan|v|cleaned|cleaned
+cook|memasak|v|cooked|cooked
+drive|mengemudi|v|drove|driven
+ride|mengendarai, naik|v|rode|ridden
+carry|membawa, mengangkat|v|carried|carried
+call|memanggil, menelepon|v|called|called
+say|berkata|v|said|said
+tell|memberitahu|v|told|told
+find|menemukan|v|found|found
+lose|kehilangan, kalah|v|lost|lost
+win|menang|v|won|won
+build|membangun|v|built|built
+choose|memilih|v|chose|chosen
+grow|tumbuh|v|grew|grown
+wait|menunggu|v|waited|waited
+visit|mengunjungi|v|visited|visited
+travel|bepergian|v|traveled|traveled
+be|adalah, menjadi|v|was/were|been
+am|adalah|v|was|been
+is|adalah|v|was|been
+are|adalah|v|were|been
+want|ingin|v|wanted|wanted
+need|membutuhkan|v|needed|needed
+like|menyukai|v|liked|liked
+love|mencintai, menyukai|v|loved|loved
+live|tinggal, hidup|v|lived|lived
+speak|berbicara|v|spoke|spoken
+say|mengatakan|v|said|said
+introduce|memperkenalkan|v|introduced|introduced
+call|memanggil|v|called|called
+feel|merasa|v|felt|felt
+think|berpikir|v|thought|thought
+believe|percaya|v|believed|believed
+try|mencoba|v|tried|tried
+use|menggunakan|v|used|used
+need|perlu|v|needed|needed
+keep|menjaga, menyimpan|v|kept|kept
+put|meletakkan|v|put|put
+let|membiarkan|v|let|let
+show|menunjukkan|v|showed|shown
+hear|mendengar|v|heard|heard
+feel|merasakan|v|felt|felt
+leave|meninggalkan|v|left|left
+move|bergerak, pindah|v|moved|moved
+happen|terjadi|v|happened|happened
+change|mengubah|v|changed|changed
+follow|mengikuti|v|followed|followed
+create|membuat|v|created|created
+seem|tampak|v|seemed|seemed
+become|menjadi|v|became|become
+send|mengirim|v|sent|sent
+spend|menghabiskan waktu/uang|v|spent|spent
+pay|membayar|v|paid|paid
+wear|memakai|v|wore|worn
+break|memecahkan|v|broke|broken
+cut|memotong|v|cut|cut
+draw|menggambar|v|drew|drawn
+fall|jatuh|v|fell|fallen
+fly|terbang|v|flew|flown
+forget|melupakan|v|forgot|forgotten
+forgive|memaafkan|v|forgave|forgiven
+hold|memegang|v|held|held
+hurt|menyakiti|v|hurt|hurt
+sell|menjual|v|sold|sold
+shine|bersinar|v|shone|shone
+throw|melempar|v|threw|thrown
+catch|menangkap|v|caught|caught
+fight|bertarung|v|fought|fought
+teach|mengajar|v|taught|taught
+house|rumah|n
+home|rumah, kampung halaman|n
+school|sekolah|n
+teacher|guru|n
+student|siswa, pelajar|n
+book|buku|n
+friend|teman|n
+family|keluarga|n
+food|makanan|n
+water|air|n
+morning|pagi|n
+night|malam|n
+day|hari|n
+time|waktu|n
+city|kota|n
+village|desa|n
+country|negara|n
+job|pekerjaan|n
+money|uang|n
+weather|cuaca|n
+environment|lingkungan|n
+health|kesehatan|n
+hobby|hobi|n
+holiday|liburan|n
+library|perpustakaan|n
+homework|pekerjaan rumah (PR)|n
+happy|bahagia, senang|a
+sad|sedih|a
+big|besar|a
+small|kecil|a
+beautiful|cantik, indah|a
+important|penting|a
+difficult|sulit|a
+easy|mudah|a
+new|baru|a
+old|tua, lama|a
+healthy|sehat|a
+busy|sibuk|a
+hungry|lapar|a
+tired|lelah|a
+famous|terkenal|a
+polite|sopan|a`.split("\n").map(l=>{const a=l.split("|");return{en:a[0],id:a[1],p:a[2],f:a.slice(3)}});
+
+const P=`keluar rumah=leave the house~leave/left/left|go out~go/went/gone|get out of the house~get/got/got|step outside~step/stepped/stepped
+masuk rumah=enter the house~enter/entered/entered|come in~come/came/come|go into the house~go/went/gone
+pergi ke sekolah=go to school~go/went/gone|head to school~head/headed/headed|attend school~attend/attended/attended
+pulang ke rumah=go home~go/went/gone|come home~come/came/come|return home~return/returned/returned|get home~get/got/got
+bangun tidur=wake up~wake/woke/woken|get up~get/got/got
+tidur=sleep~sleep/slept/slept|go to bed~go/went/gone|fall asleep~fall/fell/fallen
+makan malam=have dinner~have/had/had|eat dinner~eat/ate/eaten
+makan pagi=have breakfast~have/had/had|eat breakfast~eat/ate/eaten
+membaca buku=read a book~read/read/read|look at a book~look/looked/looked
+menulis surat=write a letter~write/wrote/written|send a letter~send/sent/sent
+menonton televisi=watch TV~watch/watched/watched|see a program~see/saw/seen
+mendengarkan musik=listen to music~listen/listened/listened|hear music~hear/heard/heard
+bermain bola=play football~play/played/played|kick the ball~kick/kicked/kicked
+membantu ibu=help my mother~help/helped/helped|give a hand to mom~give/gave/given
+menunggu bus=wait for the bus~wait/waited/waited|catch the bus~catch/caught/caught
+naik bus=take a bus~take/took/taken|ride a bus~ride/rode/ridden|go by bus~go/went/gone
+naik sepeda=ride a bike~ride/rode/ridden|cycle~cycle/cycled/cycled
+mencuci piring=wash the dishes~wash/washed/washed|do the dishes~do/did/done
+mengerjakan pr=do homework~do/did/done|finish homework~finish/finished/finished
+mengunjungi teman=visit a friend~visit/visited/visited|meet a friend~meet/met/met|see a friend~see/saw/seen
+berlibur=go on holiday~go/went/gone|spend a holiday~spend/spent/spent|take a vacation~take/took/taken
+memasak=cook~cook/cooked/cooked|make food~make/made/made|prepare a meal~prepare/prepared/prepared
+bertemu teman=meet a friend~meet/met/met|see a friend~see/saw/seen|hang out with a friend~hang/hung/hung
+menelepon=call someone~call/called/called|phone someone~phone/phoned/phoned|give a call~give/gave/given
+menjawab pertanyaan=answer a question~answer/answered/answered|reply to a question~reply/replied/replied
+membeli baju=buy clothes~buy/bought/bought|shop for clothes~shop/shopped/shopped
+mandi=take a bath~take/took/taken|have a shower~have/had/had|wash up~wash/washed/washed
+berangkat kerja=go to work~go/went/gone|leave for work~leave/left/left|head to work~head/headed/headed
+belajar bahasa inggris=study English~study/studied/studied|learn English~learn/learned/learned|practice English~practice/practiced/practiced
+berjalan kaki=walk~walk/walked/walked|go on foot~go/went/gone|travel on foot~travel/traveled/traveled`.split("\n").map(l=>{const[k,v]=l.split("=");return{k,items:v.split("|").map(x=>{const[t,f]=x.split("~");return{t,f:f.split("/")}})}});
+const R={};
+`go:gou come:kam leave:liv enter:enter eat:it drink:drink sleep:slip wake:weik up:ap read:rid write:rait speak:spik listen:lisen watch:woch see:si look:luk buy:bai sell:sel give:giv take:teik bring:bring make:meik do:du have:hev get:get study:stadi learn:lern teach:tich work:werk play:plei run:ran walk:wok swim:swim sing:sing sit:sit stand:stend open:oupen close:klouz help:help ask:esk answer:enser think:thingk know:nou understand:anderstend forget:forget remember:rimember meet:mit start:start begin:bigin finish:finish wash:wosh clean:klin cook:kuk drive:draiv ride:raid carry:keri call:kol say:sei tell:tel find:faind lose:luz win:win build:bild choose:chuz grow:grou wait:weit visit:visit travel:trevel
+house:haus home:houm school:skul teacher:ticer student:styuden book:buk friend:frend family:femili food:fud water:woter morning:morning night:nait day:dei time:taim city:siti village:vilij country:kantri job:job money:mani weather:wedher environment:inwairenmen health:helth hobby:hobi holiday:holidei library:laibreri homework:houmwerk
+happy:hepi sad:sed big:big small:smol beautiful:byutiful important:impotent difficult:difikalt easy:izi new:nyu old:ould healthy:helthi busy:bizi hungry:hangri tired:taierd famous:feimas polite:polait
+went:wen gone:gon came:keim left:left entered:entered ate:eit eaten:iten drank:drenk drunk:drangk slept:slept woke:wouk woken:woukn wrote:rout written:riten spoke:spouk spoken:spoukn listened:lisend watched:wocht saw:so seen:sin looked:lukt bought:bot sold:sould gave:geiv given:given took:tuk taken:teikn brought:brot made:meid did:did done:dan had:hed got:got studied:stadid learned:lernd taught:tot worked:werkt played:pleid ran:ren walked:wokt swam:swem swum:swam sang:seng sung:sang sat:set stood:stud opened:oupend closed:klouzd helped:helpt asked:eskt answered:ensered thought:thot knew:nyu known:noun understood:anderstud forgot:forgot forgotten:forgoten remembered:rimembered met:met started:startid began:bigen begun:bigan finished:finisht washed:wosht cleaned:klind cooked:kukt drove:drouv driven:driven rode:roud ridden:riden carried:kerid called:kold said:sed told:tould found:faund lost:lost won:wan built:bilt chose:chouz chosen:chouzn grew:gru grown:groun waited:weitid visited:visitid traveled:trevld
+the:dhe a:e my:mai to:tu of:ov out:aut in:in into:intu on:on at:et by:bai for:for with:widh outside:autsaid step:step stepped:stept head:hed headed:hedid attend:eten attended:etendid return:riternd returned:riternd fall:fol fell:fel fallen:folen asleep:eslip bed:bed dinner:diner breakfast:brekfast letter:leter send:send sent:sent tv:tivi program:prougram music:myuzik hear:hir heard:herd football:futbol kick:kik kicked:kikt ball:bol mother:madher mom:mom hand:hend bus:bas catch:kech caught:kot bike:baik cycle:saikel cycled:saikeld dishes:dishiz vacation:vekeisyen spend:spend spent:spent meal:mil prepare:pripeer prepared:pripeerd someone:samwan phone:foun phoned:fownd question:kwescen reply:riplai replied:riplaid clothes:klouz shop:shop shopped:shopt bath:bath shower:syauer foot:fut practice:prektis practiced:prektist english:inggrish hang:heng hung:hang`.split(/\s+/).filter(Boolean).forEach(x=>{const[k,v]=x.split(":");R[k]=v});
+const R2={read:"red",the:"dhuh",this:"dhis",that:"dhat",think:"thingk",three:"thrii",school:"skuul",English:"ingglish",language:"lenggwij",because:"bikoz",people:"piipel",usually:"yuzhuali",beautiful:"byuutiful",comfortable:"kamfterbel",Wednesday:"wenzdei",answer:"enser",world:"werld"};
+const norm=x=>x.replace(/[^a-z']/g,"");
+const toks=t=>t.toLowerCase().split(" ").map(norm).filter(Boolean);
+function rd(t,p){return toks(t).map(x=>(p&&R2[x])||R[x]||x).join(" ")}
+function known(t){const a=toks(t);return a.length>0&&a.every(x=>R[x])}
+const DBL=["sit","run","get","swim","begin","stop","put","win","shop","plan","cut","hang"];
+function ing(v){
+  let[h,...r]=v.split(" ");
+  if(h=="go")h="going";
+  else if(DBL.includes(h))h+=h.slice(-1)+"ing";
+  else if(h.endsWith("ie"))h=h.slice(0,-2)+"ying";
+  else if(h.endsWith("e")&&!h.endsWith("ee"))h=h.slice(0,-1)+"ing";
+  else h+="ing";
+  return[h,...r].join(" ");
+}
+function ingR(v){const[h,...r]=v.split(" ");return[rd(h)+"ing",...r.map(x=>rd(x))].join(" ")}
+function say(t,rate){
+  try{
+    const synth=window.speechSynthesis;
+    if(!synth || typeof window.SpeechSynthesisUtterance!=='function'){
+      alert('Fitur suara tidak didukung WebView APK ini. Aktifkan Text-to-Speech di Android atau buka lewat Chrome.');return;
+    }
+    synth.cancel();const u=new SpeechSynthesisUtterance(String(t||''));u.lang='en-US';u.rate=rate||1;synth.speak(u);
+  }catch(e){alert('Fitur suara tidak tersedia di perangkat ini.');}
+}
+function esc(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML}
+function btn(t){const e=encodeURIComponent(t);return`<button class="sp" onclick="say(decodeURIComponent('${e}'))">🔊 Putar suara</button><button class="sp" onclick="say(decodeURIComponent('${e}'),0.6)">🐢 Pelan</button>`}
+function tbl(a,b,c){
+  const x=(t,p)=>`${t}<small>${rd(t,p)}</small>`;
+  return`<table><tr><th>V1</th><th>V2</th><th>V3</th><th>V-ing</th></tr><tr><td>${x(a)}</td><td>${x(b,1)}</td><td>${x(c,1)}</td><td>${ing(a)}<small>${ingR(a)}</small></td></tr></table>`;
+}
+const POS={v:"kata kerja",n:"kata benda",a:"kata sifat"};
+function isRegular(w){return !!w && w.p==="v" && !!w.f[0] && !!w.f[1] && w.f[0].toLowerCase()===w.f[1].toLowerCase() && /(?:ed|d)$/.test(w.f[0].toLowerCase());}
+function verbType(w){return isRegular(w)?"✅ Kata kerja beraturan (regular verb)":"⭐ Kata kerja tidak beraturan (irregular verb)";}
+function card(w){
+  const t=w.en;
+  let h=`<div class="card"><div class="lbl">Bahasa Inggris</div><h3>${t}<span class="tag">${POS[w.p]}</span></h3><div class="rd">🗣️ Cara baca: ${rd(t)}</div>${btn(t)}<div class="lbl" style="margin-top:8px">Artinya</div><div>${w.id}</div>`;
+  if(w.p==="v"){h+=`<p class="hint">${verbType(w)}</p>`+tbl(t,w.f[0],w.f[1]);}
+  return h+"</div>";
+}
+let mode=0,tm,netMode="auto";
+function isAppShell(){
+  const standalone=window.matchMedia&&window.matchMedia("(display-mode: standalone)").matches;
+  const iosStandalone=window.navigator.standalone===true;
+  const bridge=!!(window.Capacitor||window.cordova||window.Android);
+  return standalone||iosStandalone||bridge;
+}
+function setNetMode(value){netMode=value;updateConnectionUI();}
+function updateConnectionUI(){
+  const online=navigator.onLine===true;
+  const active=netMode==="auto"?(online?"online":"offline"):netMode;
+  document.getElementById("netAuto").classList.toggle("active",netMode==="auto");
+  document.getElementById("netOnline").classList.toggle("active",netMode==="online");
+  document.getElementById("netOffline").classList.toggle("active",netMode==="offline");
+  const dot=document.getElementById("statusDot");dot.classList.toggle("off",!online);
+  const title=document.getElementById("statusTitle"),copy=document.getElementById("statusCopy"),rec=document.getElementById("netRecommendations");
+  if(!online){title.textContent="Kami sedang offline";copy.textContent="Koneksi internet tidak terdeteksi. Kamu tetap bisa belajar dari kamus, frasa, dan kata kerja yang tersimpan.";}
+  else {title.textContent="Kamu sedang online";copy.textContent="Internet terdeteksi. Terjemahan online bisa dicoba; kamus lokal tetap tersedia kapan saja.";}
+  if(netMode!=="auto"&&netMode!== (online?"online":"offline"))copy.textContent+=(netMode==="offline"?" Mode offline dipilih manual.":" Mode online dipilih manual, tetapi koneksi internet belum terdeteksi.");
+  rec.innerHTML=active==="online"?`<div class="reco"><b>🌐 Rekomendasi online</b>Coba terjemahan kalimat lengkap, variasi arti, dan kalimat yang belum ada di kamus lokal.</div><div class="reco"><b>📚 Tetap tersedia</b>Kamus, frasa, V1–V3, dan latihan pengucapan tetap bisa dipakai.</div>`:`<div class="reco"><b>📚 Rekomendasi offline</b>Gunakan kamus, frasa tersimpan, V1–V3, dan latihan suara perangkat jika tersedia.</div><div class="reco"><b>💡 Tips</b>Untuk terjemahan kalimat baru yang belum tersimpan, sambungkan internet lalu pilih Online atau Otomatis.</div>`;
+  document.getElementById("appKind").textContent=isAppShell()?"📱 Tampilan terdeteksi seperti aplikasi":"🌐 Tampilan terdeteksi seperti website";
+}
+window.addEventListener("online",updateConnectionUI);window.addEventListener("offline",updateConnectionUI);
+if(window.matchMedia){const mq=window.matchMedia("(display-mode: standalone)");if(mq.addEventListener)mq.addEventListener("change",updateConnectionUI);}
+
+const HINT=["Ketik kata Inggris, contoh: go, happy, library","Ketik kata Indonesia, contoh: belajar, rumah, bahagia","Ketik frasa Indonesia, contoh: keluar rumah, naik bus, mengerjakan PR","Tulis kalimat Indonesia lengkap. Contoh: Halo semuanya, perkenalkan nama saya Erwin.","Cari kosakata Inggris atau Indonesia, contoh: book, sekolah, beautiful."];
+const PH=["Ketik kata bahasa Inggris...","Ketik kata bahasa Indonesia...","Ketik frasa bahasa Indonesia...","Tulis kalimat Indonesia yang mau diubah ke Inggris...","Cari kosakata..."];
+function tab(n){
+  mode=n;
+  for(let i=0;i<5;i++)document.getElementById("t"+i).className=i==n?"on":"";
+  const q=document.getElementById("q");q.value="";q.placeholder=PH[n];
+  cari();
+}
+function online(q,lp,out){
+  out.innerHTML=`<div class="empty">Mencari online... ⏳</div>`;
+  clearTimeout(tm);
+  tm=setTimeout(async()=>{
+    try{
+      const r=await fetch("https://api.mymemory.translated.net/get?q="+encodeURIComponent(q)+"&langpair="+lp);
+      const d=await r.json();
+      if(document.getElementById("q").value.toLowerCase().trim()!=q)return;
+      const t=d.responseData.translatedText;
+      const en=lp=="en|id"?q:t, id=lp=="en|id"?t:q;
+      out.innerHTML=`<div class="card"><div class="lbl">Bahasa Inggris <span class="tag">hasil online</span></div><h3>${esc(en)}</h3><div class="rd">🗣️ Cara baca: ${known(en)?rd(en):"tekan tombol suara 👇"}</div>${btn(en)}<div class="lbl" style="margin-top:8px">Artinya</div><div>${esc(id)}</div></div>`;
+    }catch(e){
+      out.innerHTML=`<div class="empty">Tidak ditemukan, dan koneksi online gagal 😅</div>`;
+    }
+  },500);
+}
+
+async function translateText(text, source, target){
+  const requests = [
+    async()=>{
+      const r=await fetch("https://api.mymemory.translated.net/get?q="+encodeURIComponent(text)+"&langpair="+source+"|"+target);
+      if(!r.ok) throw new Error("MyMemory HTTP "+r.status);
+      const d=await r.json();
+      const translated=d?.responseData?.translatedText;
+      if(!translated || d.responseStatus===403 || Number(d.responseStatus)>=400) throw new Error("MyMemory tidak memberi hasil");
+      return translated;
+    },
+    async()=>{
+      const r=await fetch("https://translate.googleapis.com/translate_a/single?client=gtx&sl="+source+"&tl="+target+"&dt=t&q="+encodeURIComponent(text));
+      if(!r.ok) throw new Error("Google Translate HTTP "+r.status);
+      const d=await r.json();
+      const translated=Array.isArray(d?.[0])?d[0].map(x=>x?.[0]||"").join(""):"";
+      if(!translated.trim()) throw new Error("Google Translate tidak memberi hasil");
+      return translated;
+    }
+  ];
+  let lastError;
+  for(const request of requests){try{return await request()}catch(e){lastError=e}}
+  throw lastError||new Error("Layanan terjemahan tidak tersedia");
+}
+const OFFLINE_PHRASES = [
+  [/^(saya )?pergi (ke )?sekolah[.! ]*$/i, "I go to school."],
+  [/^pergi[.! ]*$/i, "go"],
+  [/^halo semuanya,? nama saya (.+?)\. saya siswa baru di (.+?)[.! ]*$/i, null],
+  [/^hallo semuanya,? nama saya (.+?)\. saya siswa baru di (.+?)[.! ]*$/i, null],
+  [/^halo semuanya,? perkenalkan nama saya (.+?)\. saya siswa baru di (.+?)[.! ]*$/i, null],
+  [/^hallo semuanya,? perkenalkan nama saya (.+?)\. saya siswa baru di (.+?)[.! ]*$/i, null],
+  [/^assalamu.?alaikum ibu guru saya izin tidak masuk sekolah di karena kan ada acara keluarga[.! ]*$/i, "Peace be upon you, teacher. I would like to ask permission to be absent from school because there is a family event."],
+  [/^halo semuanya,? perkenalkan nama saya (.+?)\. saya biasa dipanggil (.+?)\. salam kenal semuanya[.! ]*$/i, null],
+  [/^hallo semuanya,? perkenalkan nama saya (.+?)\. saya biasa dipanggil (.+?)\. salam kenal semuanya[.! ]*$/i, null],
+  [/^halo semuanya,? perkenalkan nama saya (.+?)[.! ]*$/i, null],
+  [/^hallo semuanya,? perkenalkan nama saya (.+?)[.! ]*$/i, null],
+  [/^perkenalkan nama saya (.+?)\. saya pindahan dari sekolah (.+?)[.! ]*$/i, null],
+  [/^selamat pagi semuanya[.! ]*$/i, "Good morning, everyone."],
+  [/^terima kasih atas perhatiannya[.! ]*$/i, "Thank you for your attention."],
+  [/^saya tidak mengerti[.! ]*$/i, "I do not understand."],
+  [/^bolehkah saya bertanya[.! ]*$/i, "May I ask a question?"],
+  [/^saya ingin belajar bahasa inggris[.! ]*$/i, "I want to learn English."],
+  [/^nama saya (.+?)[.! ]*$/i, null],
+  [/^saya berasal dari (.+?)[.! ]*$/i, null],
+  [/^salam kenal semuanya[.! ]*$/i, "Nice to meet you, everyone."],
+  [/^terima kasih[.! ]*$/i, "Thank you."],
+  [/^apa kabar[.! ]*$/i, "How are you?"],
+  [/^saya baik-baik saja[.! ]*$/i, "I am fine."],
+  [/^saya izin tidak masuk sekolah karena ada acara keluarga[.! ]*$/i, "I would like to ask permission to be absent from school because there is a family event."]
+];
+const OFFLINE_WORDS = {
+  halo:"hello",hallo:"hello",semuanya:"everyone",semua:"everyone",perkenalkan:"let me introduce myself",nama:"name",saya:"I",aku:"I",adalah:"am",biasa:"usually",dipanggil:"called",panggil:"call",salam:"greetings",kenal:"meet",dari:"from",sekolah:"school",sma:"senior high school",pindahan:"transfer student",ibu:"ma'am",guru:"teacher",izin:"permission",tidak:"not",masuk:"attend",karena:"because",ada:"there is",acara:"event",keluarga:"family",belajar:"study",bahasa:"language",inggris:"English",terima:"give",kasih:"thanks",perhatian:"attention",pagi:"morning",siang:"afternoon",malam:"evening",baik:"fine",kabar:"how are you",ingin:"want",mau:"want",makan:"eat",minum:"drink",pergi:"go",datang:"come",membaca:"read",menulis:"write",teman:"friend",saya:"I",kamu:"you",lu:"you",dan:"and",di:"at",ke:"to",untuk:"for",dengan:"with",yang:"that",ini:"this",itu:"that",punya:"have",suka:"like",senang:"happy",sedih:"sad",rumah:"house",buku:"book",air:"water",hari:"day",sekarang:"now",besok:"tomorrow",esok:"tomorrow",kemarin:"yesterday",kemaren:"yesterday",tadi:"earlier","minggu":"week","pekan":"week","lalu":"last","minggu lalu":"last week","pekan lalu":"last week","hari ini":"today","minggu depan":"next week","bulan depan":"next month","bulan lalu":"last month","tahun depan":"next year","tahun lalu":"last year","akan":"will","sedang":"am",sudah:"already",belum:"not yet",nanti:"later",pagi:"morning",siang:"afternoon",sore:"afternoon",malam:"evening",kemudian:"then",selalu:"always",sering:"often",kadang:"sometimes",jarang:"rarely",kemana:"where",kapan:"when",siapa:"who",apa:"what",mengapa:"why",bagaimana:"how",sebelum:"before",sesudah:"after",kemudian:"then",pertama:"first",terakhir:"last",hari:"day",sekolah:"school",kelas:"class",teman:"friend",guru:"teacher",kami:"we",kita:"we",mereka:"they",dia:"he/she",mereka:"they",siswa:"student",siswi:"student",datang:"come",berangkat:"leave",pulang:"go home",berjalan:"walk",berlari:"run",bekerja:"work",bermain:"play",membeli:"buy",membantu:"help",mencuci:"wash",memasak:"cook",menonton:"watch",mendengar:"hear",mendengarkan:"listen",berbicara:"speak",bertanya:"ask",menjawab:"answer",membuka:"open",menutup:"close",membuat:"make",mengerjakan:"do",menunggu:"wait",membawa:"bring",memberi:"give",mengambil:"take",menyukai:"like",menginginkan:"want",perlu:"need",bisa:"can",dapat:"can",tidak:"not",bukan:"not",sangat:"very",lebih:"more",dan:"and",atau:"or",tetapi:"but",karena:"because",dengan:"with",tanpa:"without",dalam:"in",luar:"outside",atas:"above",bawah:"below",dekat:"near",jauh:"far"
+};
+function offlineTranslate(original){
+  const cleaned=original.trim().replace(/\s+/g," ").replace(/[.!?]+$/g,"");
+  const norm=cleaned.toLowerCase();
+  // Common school-life sentence patterns that work fully offline.
+  let m;
+  m=norm.match(/^(saya|aku)\s+(kemarin|kemaren|tadi)\s+(pergi|berangkat)\s+(ke\s+)?sekolah$/i);
+  if(m) return {en:"I went to school yesterday.",exact:true};
+  m=norm.match(/^(saya|aku)\s+(besok|esok)\s+(akan\s+)?(pergi|berangkat)\s+(ke\s+)?sekolah$/i);
+  if(m) return {en:"I will go to school tomorrow.",exact:true};
+  m=norm.match(/^(saya|aku)\s+(minggu lalu|pekan lalu)\s+(pergi|berangkat)\s+(ke\s+)?sekolah$/i);
+  if(m) return {en:"I went to school last week.",exact:true};
+  m=norm.match(/^(saya|aku)\s+(hari ini)\s+(pergi|berangkat)\s+(ke\s+)?sekolah$/i);
+  if(m) return {en:"I go to school today.",exact:true};
+  m=norm.match(/^(saya|aku)\s+(sekarang)\s+(sedang\s+)?(belajar|makan|minum|membaca|menulis|bermain)$/i);
+  if(m){const verbs={belajar:"studying",makan:"eating",minum:"drinking",membaca:"reading",menulis:"writing",bermain:"playing"};return {en:"I am "+verbs[m[4]]+" now.",exact:true};}
+  m=norm.match(/^(saya|aku)\s+(kemarin|kemaren|tadi)\s+(belajar|makan|minum|membaca|menulis|bermain|bekerja|tidur)$/i);
+  if(m){const verbs={belajar:"studied",makan:"ate",minum:"drank",membaca:"read",menulis:"wrote",bermain:"played",bekerja:"worked",tidur:"slept"};return {en:"I "+verbs[m[3]]+" "+(m[2]==="tadi"?"earlier":"yesterday")+".",exact:true};}
+  m=norm.match(/^(saya|aku)\s+(besok|esok)\s+(akan\s+)?(belajar|makan|minum|membaca|menulis|bermain|bekerja|tidur)$/i);
+  if(m){const verbs={belajar:"study",makan:"eat",minum:"drink",membaca:"read",menulis:"write",bermain:"play",bekerja:"work",tidur:"sleep"};return {en:"I will "+verbs[m[4]]+" tomorrow.",exact:true};}
+  for(const [pattern,translation] of OFFLINE_PHRASES){
+    const match=cleaned.match(pattern);
+    if(!match) continue;
+    if(translation) return {en:translation,exact:true};
+    if(/nama saya/i.test(cleaned) && /siswa baru di/i.test(cleaned)){
+      const m=cleaned.match(/nama saya (.+?)\. saya siswa baru di (.+?)[.! ]*$/i);
+      if(m) return {en:`Hello everyone, my name is ${m[1].trim()}. I am a new student at ${m[2].trim()}.`,exact:true};
+    }
+    if(/perkenalkan nama saya/i.test(cleaned) && /biasa dipanggil/i.test(cleaned)){
+      const m=cleaned.match(/nama saya (.+?)\. saya biasa dipanggil (.+?)\. salam kenal semuanya/i);
+      if(m) return {en:`Hello everyone, let me introduce myself. My name is ${m[1].trim()}. You can call me ${m[2].trim()}. Nice to meet you all.`,exact:true};
+    }
+    if(/perkenalkan nama saya/i.test(cleaned) && /pindahan dari sekolah/i.test(cleaned)){
+      const m=cleaned.match(/perkenalkan nama saya (.+?)\. saya pindahan dari sekolah (.+)/i);
+      if(m) return {en:`Let me introduce myself. My name is ${m[1].trim()}. I am a transfer student from ${m[2].trim()}.`,exact:true};
+    }
+    if(/perkenalkan nama saya/i.test(cleaned)){
+      const m=cleaned.match(/nama saya (.+)/i);
+      if(m) return {en:`Hello everyone, let me introduce myself. My name is ${m[1].trim()}.`,exact:true};
+    }
+    if(/^nama saya /i.test(cleaned)) return {en:`My name is ${cleaned.replace(/^nama saya /i,"").replace(/[.! ]+$/g,"")}.`,exact:true};
+    if(/^saya berasal dari /i.test(cleaned)) return {en:`I am from ${cleaned.replace(/^saya berasal dari /i,"").replace(/[.! ]+$/g,"")}.`,exact:true};
+  }
+  // General offline patterns for common school-life sentences.
+  const subjects={saya:"I",aku:"I",kami:"we",kita:"we",mereka:"they",dia:"he/she",kamu:"you",kalian:"you"};
+  const times={kemarin:"yesterday",kemaren:"yesterday",tadi:"earlier",besok:"tomorrow",esok:"tomorrow","hari ini":"today",sekarang:"now","minggu lalu":"last week","pekan lalu":"last week","minggu depan":"next week"};
+  const actions={belajar:{base:"study",past:"studied",ing:"studying"},makan:{base:"eat",past:"ate",ing:"eating"},minum:{base:"drink",past:"drank",ing:"drinking"},membaca:{base:"read",past:"read",ing:"reading"},menulis:{base:"write",past:"wrote",ing:"writing"},bermain:{base:"play",past:"played",ing:"playing"},bekerja:{base:"work",past:"worked",ing:"working"},tidur:{base:"sleep",past:"slept",ing:"sleeping"},pergi:{base:"go",past:"went",ing:"going"},datang:{base:"come",past:"came",ing:"coming"},berjalan:{base:"walk",past:"walked",ing:"walking"},berlari:{base:"run",past:"ran",ing:"running"},memasak:{base:"cook",past:"cooked",ing:"cooking"},menonton:{base:"watch",past:"watched",ing:"watching"},membantu:{base:"help",past:"helped",ing:"helping"}};
+  let m2=norm.match(/^(saya|aku|kami|kita|mereka|dia|kamu|kalian)\s+(kemarin|kemaren|tadi|besok|esok|hari ini|sekarang|minggu lalu|pekan lalu|minggu depan)\s+(?:akan\s+)?(belajar|makan|minum|membaca|menulis|bermain|bekerja|tidur|pergi|datang|berjalan|berlari|memasak|menonton|membantu)$/i);
+  if(m2){const who=subjects[m2[1]],time=times[m2[2]],a=actions[m2[3]];let verb;if(["besok","esok","minggu depan"].includes(m2[2]))verb="will "+a.base;else if(["sekarang"].includes(m2[2]))verb=(who==="I"?"am":who==="he/she"?"is":who==="you"||who==="we"||who==="they"?"are":"are")+" "+a.ing;else verb=a.past;return {en:who+" "+verb+" "+time+".",exact:true};}
+  m2=norm.match(/^(saya|aku|kami|kita|mereka|dia|kamu|kalian)\s+(belajar|makan|minum|membaca|menulis|bermain|bekerja|tidur|pergi|datang|berjalan|berlari|memasak|menonton|membantu)$/i);
+  if(m2){const who=subjects[m2[1]],a=actions[m2[2]];return {en:who+" "+(who==="he/she"?a.base+"s":a.base)+".",exact:true};}
+  // Offline dictionary fallback: translate known words without calling the internet.
+  const tokens=cleaned.match(/[A-Za-zÀ-ÿ0-9']+|[^A-Za-zÀ-ÿ0-9']+/g)||[];
+  let translated=tokens.map(token=>{
+    if(!/^[A-Za-zÀ-ÿ0-9']+$/.test(token)) return token;
+    const lower=token.toLowerCase();
+    const val=OFFLINE_WORDS[lower] || (W.find(w=>w.id.toLowerCase().split(/,\s*/).includes(lower))||{}).en;
+    if(!val) return `[${token}]`;
+    return /^[A-ZÀ-Ý]/.test(token)?val.charAt(0).toUpperCase()+val.slice(1):val;
+  }).join("").replace(/\s+([,.!?])/g,"$1");
+  return {en:translated,exact:false};
+}
+function offlineSentence(q,out){
+  const result=offlineTranslate(q);
+  const en=result.en;
+  const words=en.toLowerCase().match(/[a-z']+/g)||[];
+  const verbs=[]; const seen=new Set();
+  // Be-verb forms are essential in introductions ("I am...", "my name is...").
+  if(/\\b(am|is|are|was|were|be|been|being)\\b/i.test(en)){
+    verbs.push({en:"be",id:"adalah / menjadi",f:["was/were","been"]});
+    seen.add("be");
+  }
+  // Detect base verbs and their known V2/V3 forms, plus common regular -s/-es/-ed/-ing forms.
+  // Deduplicate by the dictionary lemma so each verb is shown once.
+  words.forEach(word=>{
+    let w=W.find(x=>x.p==="v"&&(x.en.toLowerCase()===word||x.f.some(f=>f&&f.toLowerCase().split("/").includes(word))));
+    if(!w){
+      w=W.find(x=>{
+        if(x.p!=="v") return false;
+        const base=x.en.toLowerCase();
+        const candidates=new Set([base+"s",base+"es",base+"ed",base+"d",base+"ing"]);
+        if(base.endsWith("e")){candidates.add(base.slice(0,-1)+"ing");candidates.add(base+"d");}
+        if(base.endsWith("y")){candidates.add(base.slice(0,-1)+"ies");candidates.add(base.slice(0,-1)+"ied");}
+        if(base.length>2 && /[^aeiou]y$/.test(base)) candidates.add(base.slice(0,-1)+"ing");
+        if(base.endsWith("e")) candidates.add(base.slice(0,-1)+"ed");
+        return candidates.has(word);
+      });
+    }
+    if(w&&!seen.has(w.en)){seen.add(w.en);verbs.push(w);}
+  });
+  const verbHtml=verbs.length?verbs.map(w=>{
+    const forms=w.en==="be"
+      ? `<table><tr><th>V1</th><th>V2</th><th>V3</th><th>V-ing</th></tr><tr><td>be<small>bi</small></td><td>was / were<small>wos / wer</small></td><td>been<small>bin</small></td><td>being<small>bi-ing</small></td></tr></table>`
+      : tbl(w.en,w.f[0]||w.en,w.f[1]||w.en);
+    const kind=(w.en==="be"||w.f[0]!==w.en&&w.f[1]!==w.en)?"Irregular verb (tidak beraturan)":"Kata kerja";
+    return `<div class="card"><h3>${esc(w.en)} <span class="tag">${kind}</span></h3><div class="rd">Arti: ${esc(w.id)} · Cara baca: ${esc(rd(w.en))}</div>${forms}</div>`;
+  }).join(""):`<p class="hint">Kata kerja belum dikenali dari kalimat ini. Kalimat seperti “Saya belajar” atau “Saya pergi” akan dikenali jika terjemahan offline berhasil mengenali katanya.</p>`;
+  out.innerHTML=`<div class="card"><div class="lbl">🇮🇩 Kalimat Indonesia</div><div style="font-size:16px;margin:6px 0 14px">${esc(q)}</div><div class="lbl">🇬🇧 Hasil bahasa Inggris <span class="tag">OFFLINE</span></div><h3>${esc(en)}</h3><div class="rd">🗣️ Cara baca: ${esc(rd(en))}</div>${btn(en)}<p class="hint">${result.exact?"Terjemahan dari frasa offline yang tersimpan di aplikasi.":"Mode kamus offline: kata yang tidak dikenal ditandai [seperti ini]. Susunan kalimat otomatis mungkin belum alami."}</p></div><div class="card"><h3>📚 Kata kerja yang dikenali</h3>${verbHtml}</div>`;
+}
+function cari(){
+  const raw=document.getElementById("q").value.trim();
+  const q=raw.toLowerCase();
+  const out=document.getElementById("out");
+  document.getElementById("hint").textContent=HINT[mode];
+  if(!q){out.innerHTML=`<div class="empty">Mulai mengetik untuk mencari ✨</div>`;return}
+  let h="";
+  // If the user pastes a full sentence while on another tab, translate the sentence instead of showing unrelated phrase matches.
+  if(mode===3 || (mode!==4 && raw.split(/\s+/).length>=7 && /[,.!?]/.test(raw)) || (mode===2 && /^(saya|aku|kami|kita|dia|mereka)\s+/i.test(raw) && /\b(kemarin|kemaren|besok|minggu lalu|pekan lalu|hari ini|sekarang|tadi|akan|sedang|sudah|belum)\b/i.test(raw))){
+    const wantOnline=netMode==="online"||(netMode==="auto"&&navigator.onLine);
+    if(wantOnline&&navigator.onLine){
+      out.innerHTML=`<div class="card"><div class="status-line"><span class="status-dot"></span>Menerjemahkan secara online…</div><p class="status-copy">Sedang mencoba layanan terjemahan. Jika gagal, hasil offline akan digunakan.</p></div>`;
+      const submitted=raw;
+      translateText(raw,"id","en").then(en=>{
+        if(document.getElementById("q").value.trim()!==submitted)return;
+        const words=en.toLowerCase().match(/[a-z']+/g)||[],verbs=[],seen=new Set();
+        if(/\b(am|is|are|was|were|be|been|being)\b/i.test(en)){const be=W.find(x=>x.en==="be")||{en:"be",id:"adalah / menjadi",f:["was/were","been"]};verbs.push(be);seen.add("be");}
+        words.forEach(word=>{let w=W.find(x=>x.p==="v"&&(x.en.toLowerCase()===word||x.f.some(f=>f&&f.toLowerCase().split("/").includes(word))));if(!w)w=W.find(x=>x.p==="v"&&new Set([x.en+"s",x.en+"es",x.en+"ed",x.en+"d",x.en+"ing",x.en.endsWith("e")?x.en.slice(0,-1)+"ing":"",x.en.endsWith("e")?x.en+"d":""]).has(word));if(w&&!seen.has(w.en)){seen.add(w.en);verbs.push(w);}});
+        const vh=verbs.length?verbs.map(w=>`<div class="card"><h3>${esc(w.en)} <span class="tag">${(w.en==="be"||w.f[0]!==w.en&&w.f[1]!==w.en)?"Irregular verb · tidak beraturan":"Regular verb · beraturan"}</span></h3><div class="rd">Arti: ${esc(w.id)} · Cara baca: ${esc(rd(w.en))}</div>${tbl(w.en,w.f[0]||w.en,w.f[1]||w.en)}</div>`).join(""):`<p class="hint">Belum ada kata kerja yang cocok dengan database lokal.</p>`;
+        out.innerHTML=`<div class="card"><div class="lbl">🇮🇩 Kalimat Indonesia</div><div>${esc(submitted)}</div><div class="lbl" style="margin-top:12px">🇬🇧 Hasil terjemahan <span class="tag">ONLINE</span></div><h3>${esc(en)}</h3><div class="rd">🗣️ Cara baca: ${esc(rd(en))}</div>${btn(en)}</div><div class="card"><h3>📚 Kata kerja yang dikenali</h3>${vh}</div>`;
+      }).catch(()=>offlineSentence(submitted,out));
+    }else offlineSentence(raw,out);
+    return;
+  }
+  if(mode===4){
+    const r=W.filter(w=>w.en.toLowerCase().includes(q)||w.id.toLowerCase().includes(q));
+    const items=r.slice(0,35);
+    h=`<div class="card"><h3>📚 Kosakata Inggris–Indonesia</h3><p class="hint">${items.length} hasil dari kamus offline · ketuk suara untuk latihan pelafalan</p>`+items.map(w=>`<div class="word-row"><div><b>${esc(w.en)} <span class="tag">${POS[w.p]}</span></b><small>${esc(w.id)} · Cara baca: ${esc(rd(w.en))}</small></div><button class="mini" onclick="say(decodeURIComponent('${encodeURIComponent(w.en)}'))">🔊</button></div>`).join("")+`</div>`;
+  }else if(mode==0){
+    const exact=W.filter(w=>w.en.toLowerCase()===q);const r=exact.length?exact:W.filter(w=>w.en.includes(q)).sort((a,b)=>b.en.startsWith(q)-a.en.startsWith(q));
+    h=r.slice(0,20).map(card).join("");
+  }else if(mode==1){
+    const f=w=>w.id.toLowerCase().split(", ");
+    const r=W.filter(w=>f(w).some(x=>x.includes(q))).sort((a,b)=>f(b).some(x=>x.startsWith(q))-f(a).some(x=>x.startsWith(q)));
+    h=r.slice(0,20).map(card).join("");
+  }else{
+    const stop=["ke","di","dan","yang","untuk","dari","itu","ini","saya","aku"];
+    const ws=q.split(/\s+/).filter(x=>x.length>1&&!stop.includes(x));
+    // Search the offline verb dictionary first, whether the user types English or Indonesian.
+    const verbMatches=W.filter(w=>w.p==="v"&&(w.en.toLowerCase().includes(q)||w.id.toLowerCase().split(/,\s*/).some(x=>x.includes(q))||w.f.some(f=>f&&f.toLowerCase().includes(q))));
+    if(verbMatches.length){
+      h=`<div class="card"><h3>📚 Kata kerja offline</h3><p class="hint">${Math.min(verbMatches.length,25)} hasil dari data lokal · tersedia tanpa internet</p>`+verbMatches.slice(0,25).map(card).join("")+`</div>`;
+    }
+    const sc=P.map(p=>{
+      const kw=p.k.split(" ");
+      let s=ws.filter(x=>kw.includes(x)).length;
+      if(p.k.includes(q))s+=2;
+      return{p,s};
+    }).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,4);
+    sc.forEach(({p})=>{
+      h+=`<div class="card"><h3>🇮🇩 ${p.k}</h3><div class="lbl">Bahasa Inggris</div>`;
+      p.items.forEach(it=>{
+        h+=`<div class="ph">${it.t}</div><div class="rd">🗣️ Cara baca: ${rd(it.t)}</div>${btn(it.t)}${tbl(it.f[0],it.f[1],it.f[2])}`;
+      });
+      h+="</div>";
+    });
+    if(!h){
+      const r=W.filter(w=>ws.some(x=>w.id.toLowerCase().split(", ").some(y=>y.includes(x))));
+      if(r.length)h=`<div class="hint">Frasa belum ada, ini kata-kata terkait:</div>`+r.slice(0,10).map(card).join("");
+    }
+  }
+  if(h){out.innerHTML=h;return}
+  out.innerHTML=`<div class="card"><h3>Belum ada di kamus offline 💙</h3><p>Untuk tetap bisa belajar tanpa internet, coba kata yang lebih sederhana atau cari di menu Kosakata. Data terjemahan kalimat bebas belum selengkap penerjemah online.</p></div>`;
+}
+tab(0);
+updateConnectionUI();
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+ document.querySelectorAll('.hero,.mode-panel,.card,.help-modal').forEach(el=>el.classList.add('neon-frame'));
+});
+</script>
+
+
+<script>
+(function(){
+ const $=id=>document.getElementById(id);
+ const dateFmt=new Intl.DateTimeFormat('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+ function tick(){
+   const now=new Date();
+   $('dashDate').textContent=new Intl.DateTimeFormat('id-ID',{day:'numeric',month:'short',year:'numeric'}).format(now);
+   $('dashDay').textContent=dateFmt.format(now);
+   $('dashClock').textContent=new Intl.DateTimeFormat('id-ID',{hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now);
+   const h=now.getHours();let period,greeting;
+   if(h>=4&&h<10){period='Pagi';greeting='Selamat pagi, semangat belajar! ☀️'}
+   else if(h>=10&&h<15){period='Siang';greeting='Selamat siang, tetap semangat! 🌤️'}
+   else if(h>=15&&h<18){period='Sore';greeting='Selamat sore, lanjut belajar santai. 🌇'}
+   else {period='Malam';greeting='Selamat malam, jangan lupa istirahat. 🌙'}
+   $('dashPeriod').textContent=period;$('dashGreeting').textContent=greeting;
+ }
+ tick();setInterval(tick,1000);
+ const weatherCodes={0:['Cerah','☀️'],1:['Cerah berawan','🌤️'],2:['Berawan sebagian','⛅'],3:['Berawan','☁️'],45:['Berkabut','🌫️'],48:['Kabut tebal','🌫️'],51:['Gerimis ringan','🌦️'],53:['Gerimis','🌦️'],55:['Gerimis lebat','🌧️'],61:['Hujan ringan','🌦️'],63:['Hujan','🌧️'],65:['Hujan lebat','🌧️'],71:['Salju ringan','🌨️'],73:['Salju','🌨️'],75:['Salju lebat','❄️'],80:['Hujan lokal','🌦️'],81:['Hujan lokal','🌧️'],82:['Hujan lokal lebat','⛈️'],95:['Badai petir','⛈️'],96:['Badai petir + hujan es','⛈️'],99:['Badai petir kuat','⛈️']};
+ async function loadWeatherAt(lat,lon){
+   const title=$('dashWeather'),detail=$('dashWeatherDetail');
+   try{
+     title.textContent='Memuat cuaca…';
+     const url=`https://api.open-meteo.com/v1/forecast?latitude=${encodeURIComponent(lat)}&longitude=${encodeURIComponent(lon)}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code&timezone=auto`;
+     const response=await fetch(url);if(!response.ok)throw new Error('weather');
+     const data=await response.json(),c=data.current,desc=weatherCodes[c.weather_code]||['Kondisi cuaca','🌡️'];
+     title.textContent=`${desc[1]} ${desc[0]}`;detail.textContent=`${Math.round(c.temperature_2m)}°C · Terasa ${Math.round(c.apparent_temperature)}°C · Kelembapan ${c.relative_humidity_2m}%`;
+   }catch(e){title.textContent='Cuaca belum tersedia';detail.textContent='Periksa koneksi internet, lalu coba lagi.'}
+ }
+ async function manualWeather(){
+   const city=prompt('Masukkan nama kota/kabupaten untuk cuaca, contoh: Tangerang');
+   if(!city||!city.trim())return;
+   const title=$('dashWeather'),detail=$('dashWeatherDetail');title.textContent='Mencari lokasi…';detail.textContent='Menggunakan nama kota, tanpa izin GPS.';
+   try{
+     const r=await fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(city.trim())+'&count=1&language=id&format=json');
+     if(!r.ok)throw new Error('geo');const j=await r.json();if(!j.results||!j.results.length)throw new Error('notfound');
+     await loadWeatherAt(j.results[0].latitude,j.results[0].longitude);
+     detail.textContent += ' · '+j.results[0].name;
+   }catch(e){title.textContent='Lokasi tidak ditemukan';detail.textContent='Coba nama kota lain atau periksa internet.'}
+ }
+ async function getWeather(){
+   const title=$('dashWeather'),detail=$('dashWeatherDetail');
+   if(!navigator.onLine){title.textContent='Offline';detail.textContent='Cuaca perlu internet. Tekan Perbarui saat online.';return}
+   if(!navigator.geolocation||!window.isSecureContext){title.textContent='Pilih kota manual';detail.textContent='GPS tidak tersedia di APK ini. Tekan Perbarui cuaca untuk mencari kota tanpa izin lokasi.';return}
+   title.textContent='Memeriksa…';detail.textContent='Mencoba mengambil lokasi perangkat.';
+   try{
+     navigator.geolocation.getCurrentPosition(pos=>loadWeatherAt(pos.coords.latitude,pos.coords.longitude),()=>{
+       title.textContent='Lokasi belum diizinkan';detail.textContent='Tekan Perbarui cuaca untuk memasukkan nama kota secara manual.';
+     },{enableHighAccuracy:false,timeout:8000,maximumAge:600000});
+   }catch(e){title.textContent='Pilih kota manual';detail.textContent='Tekan Perbarui cuaca untuk memasukkan nama kota.'}
+ }
+ $('weatherRefresh').addEventListener('click',()=>{
+   if(!navigator.onLine){getWeather();return}
+   if(navigator.geolocation&&window.isSecureContext){navigator.geolocation.getCurrentPosition(pos=>loadWeatherAt(pos.coords.latitude,pos.coords.longitude),manualWeather,{enableHighAccuracy:false,timeout:5000,maximumAge:600000});}
+   else manualWeather();
+ });
+ window.addEventListener('online',getWeather);
+ getWeather();
+})();
+</script>
+
+
+<style>
+/* Theme picker + stronger animated neon frame */
+header{position:relative;padding-top:40px}
+.theme-open{position:absolute;right:14px;top:10px;border:1px solid #ffffff90;background:#ffffff20;color:#fff;border-radius:999px;padding:8px 12px;font-weight:750;font-size:12px;cursor:pointer}
+.theme-panel{position:absolute;z-index:50;top:48px;right:12px;width:min(340px,calc(100vw - 24px));padding:14px;background:var(--theme-panel,#fff);color:var(--theme-ink,#123b5d);border:2px solid var(--theme-accent,#38bdf8);border-radius:18px;box-shadow:0 12px 40px #082f4960;text-align:left}
+.theme-panel[hidden]{display:none}
+.theme-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px}
+.theme-close{border:0;border-radius:9px;padding:6px 10px;background:var(--theme-soft,#e0f2fe);color:var(--theme-ink,#123b5d);cursor:pointer}
+.theme-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.theme-choice{display:flex;align-items:center;gap:7px;min-width:0;border:1px solid var(--theme-border,#bae6fd);border-radius:10px;background:var(--theme-panel,#fff);color:var(--theme-ink,#123b5d);padding:8px 6px;font-size:11px;font-weight:650;cursor:pointer;text-align:left}
+.theme-choice[aria-pressed=true]{outline:3px solid var(--theme-accent,#38bdf8);outline-offset:1px}
+.theme-swatch{width:17px;height:17px;flex:0 0 17px;border-radius:50%;border:1px solid #0002}
+.neon-reset{width:100%;margin-top:12px;background:var(--theme-accent,#0284c7);color:var(--theme-button-text,#fff);border:0;border-radius:11px;padding:10px;font-weight:800;cursor:pointer}
+.neon-frame{--spin:0deg;position:relative;border-radius:16px;isolation:isolate}
+.neon-frame:before{content:"";position:absolute;inset:-2px;border-radius:inherit;padding:4px;background:conic-gradient(from var(--spin,0deg),transparent 0 36%,var(--neon-a,#7dd3fc) 44%,var(--neon-b,#38bdf8) 51%,var(--neon-a,#7dd3fc) 58%,transparent 69% 82%,var(--neon-b,#38bdf8) 88%,transparent 96%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;animation:neonOrbit 2.6s linear infinite;filter:drop-shadow(0 0 5px var(--neon-glow,#38bdf8)) drop-shadow(0 0 10px var(--neon-glow,#38bdf8));z-index:2}
+@keyframes neonOrbit{to{--spin:360deg}}
+@property --spin{syntax:"<angle>";initial-value:0deg;inherits:false}
+@media(max-width:480px){header{padding-top:48px}.theme-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.theme-panel{top:48px}}
+</style>
+<script>
+(function(){
+ const themes=[
+  ['Red','Merah','#dc2626','#fee2e2','#7f1d1d','#ffffff'],
+  ['Blue','Biru','#2563eb','#dbeafe','#1e3a8a','#ffffff'],
+  ['Yellow','Kuning','#eab308','#fef9c3','#713f12','#292000'],
+  ['Green','Hijau','#16a34a','#dcfce7','#14532d','#ffffff'],
+  ['Black','Hitam','#171717','#e5e5e5','#111111','#ffffff'],
+  ['White','Putih','#f8fafc','#ffffff','#334155','#172033'],
+  ['Orange','Oranye','#ea580c','#ffedd5','#7c2d12','#ffffff'],
+  ['Purple','Ungu','#9333ea','#f3e8ff','#581c87','#ffffff'],
+  ['Pink','Merah muda','#ec4899','#fce7f3','#831843','#ffffff'],
+  ['Brown','Coklat','#92400e','#f5e7d5','#451a03','#ffffff'],
+  ['Grey / Gray','Abu-abu','#6b7280','#f3f4f6','#374151','#ffffff'],
+  ['Gold','Emas','#ca8a04','#fef3c7','#713f12','#ffffff'],
+  ['Navy Blue','Biru dongker','#1e3a8a','#dbeafe','#0f172a','#ffffff'],
+  ['Dark Grey','Abu gelap','#374151','#e5e7eb','#111827','#ffffff'],
+  ['Jet Black','Hitam pekat','#050505','#262626','#000000','#ffffff']
+ ];
+ const root=document.documentElement, panel=document.getElementById('themePanel'), grid=document.getElementById('themeGrid');
+ const open=document.getElementById('themeOpen'), close=document.getElementById('themeClose');
+ function apply(t){
+  const [name,id,accent,soft,ink,buttonText]=t;
+  root.style.setProperty('--theme-accent',accent);
+  root.style.setProperty('--theme-soft',soft);
+  root.style.setProperty('--theme-ink',ink);
+  root.style.setProperty('--theme-button-text',buttonText);
+  root.style.setProperty('--theme-panel','#ffffff');
+  root.style.setProperty('--theme-border',accent+'70');root.style.setProperty('--theme-soft',soft);
+  root.style.setProperty('--theme-ink',ink);root.style.setProperty('--theme-button-text',buttonText);
+  root.style.setProperty('--theme-panel','#ffffff');
+  root.style.setProperty('--theme-border',accent+'70');
+  root.style.setProperty('--neon-a',accent);root.style.setProperty('--neon-b',soft);root.style.setProperty('--neon-glow',accent);
+  document.body.style.background='linear-gradient(145deg,'+soft+',#ffffff 62%,'+soft+')';
+  document.body.style.color=ink;
+  document.querySelectorAll('header').forEach(el=>el.style.background='linear-gradient(135deg,'+ink+','+accent+')');
+  document.querySelectorAll('.hero,.mode-panel,.card,.dash-tile,.help-modal').forEach(el=>{el.style.borderColor=accent+'80';});
+  document.querySelectorAll('button:not(.theme-choice):not(.theme-close):not(.theme-open)').forEach(el=>{if(!el.classList.contains('secondary')&&!el.classList.contains('tab')){el.style.setProperty('--active-theme',accent);}});
+  document.querySelectorAll('.theme-choice').forEach((b,i)=>b.setAttribute('aria-pressed',String(themes[i]===t)));
+  open.textContent='🎨 '+id;
+  try{localStorage.setItem('erwinEnglishTheme',name)}catch(e){}
+ }
+ themes.forEach(t=>{
+  const b=document.createElement('button');b.type='button';b.className='theme-choice';
+  b.innerHTML='<span class="theme-swatch" style="background:'+t[2]+'"></span><span>'+t[0]+'<br><small>'+t[1]+'</small></span>';
+  b.addEventListener('click',()=>{apply(t);panel.hidden=true;open.setAttribute('aria-expanded','false')});grid.appendChild(b);
+ });
+ open.addEventListener('click',()=>{panel.hidden=!panel.hidden;open.setAttribute('aria-expanded',String(!panel.hidden))});
+ close.addEventListener('click',()=>{panel.hidden=true;open.setAttribute('aria-expanded','false')});
+ document.getElementById('neonReset').addEventListener('click',()=>{
+  document.querySelectorAll('.neon-frame').forEach(el=>{el.classList.remove('neon-off');void el.offsetWidth;});
+  panel.hidden=true;open.setAttribute('aria-expanded','false');
+ });
+ try{const saved=localStorage.getItem('erwinEnglishTheme');const t=themes.find(x=>x[0]===saved);if(t)apply(t);else apply(themes[1]);}catch(e){apply(themes[1]);}
+})();
+</script>
+
+<style>
+/* Full-page theme: every component follows the selected color */
+:root{--theme-accent:#2563eb;--theme-soft:#dbeafe;--theme-ink:#1e3a8a;--theme-button-text:#fff;--theme-panel:#fff;--theme-border:#93c5fd}
+body{background:linear-gradient(145deg,var(--theme-soft),#fff 62%,var(--theme-soft)) !important;color:var(--theme-ink) !important;transition:background .25s,color .25s}
+header{background:linear-gradient(135deg,var(--theme-ink),var(--theme-accent)) !important;transition:background .25s}
+.hero,.mode-panel,.card,.dash-tile,.help-modal,.stats,.reco-grid,.result,.search-box,.tabs,.help-launch{
+ border-color:color-mix(in srgb,var(--theme-accent) 48%,white) !important;
+}
+.hero,.mode-panel,.card,.dash-tile,.help-modal,.stats,.reco-grid,.result{
+ box-shadow:0 0 0 1px color-mix(in srgb,var(--theme-accent) 16%,transparent),0 0 14px color-mix(in srgb,var(--theme-accent) 22%,transparent) !important;
+}
+button:not(.theme-choice):not(.theme-close):not(.theme-open){
+ background-color:var(--theme-accent) !important;color:var(--theme-button-text,#fff) !important;
+ border-color:var(--theme-accent) !important;
+}
+button.secondary,button.tab{background:var(--theme-soft) !important;color:var(--theme-ink) !important;border-color:var(--theme-accent) !important}
+input,textarea,select{border-color:color-mix(in srgb,var(--theme-accent) 45%,white) !important;accent-color:var(--theme-accent)}
+a{color:var(--theme-accent)}
+.neon-frame:before{inset:-3px;padding:5px;filter:drop-shadow(0 0 7px var(--neon-glow)) drop-shadow(0 0 15px var(--neon-glow)) drop-shadow(0 0 22px var(--neon-glow))}
+.theme-open{background:var(--theme-accent)!important;color:var(--theme-button-text)!important;border:1px solid #ffffff90}
+.theme-panel{border-color:var(--theme-accent)!important;max-height:75vh;overflow-y:auto}
+.theme-choice[aria-pressed=true]{background:var(--theme-soft)!important;color:var(--theme-ink)!important}
+@media(prefers-reduced-motion:reduce){.neon-frame:before{animation:none}}
+</style>
+
+
+<style>
+.neon-color-section{margin-top:14px;padding:12px;border:1px solid var(--theme-border,#93c5fd);border-radius:14px;background:#ffffff}
+.neon-color-section>strong{color:var(--theme-ink,#1e3a8a)}
+.neon-color-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.neon-color-grid .theme-choice{padding:8px 5px;min-height:52px;font-size:12px}
+.neon-color-grid .theme-swatch{width:18px;height:18px;flex-basis:18px}
+.neon-color-grid .theme-choice[aria-pressed=true]{outline:2px solid var(--theme-accent);outline-offset:1px}
+</style>
+<script>
+(function(){
+ const colors=[
+  ['Biru neon','#38bdf8','#7dd3fc'],['Merah neon','#ef4444','#fca5a5'],
+  ['Hijau neon','#22c55e','#86efac'],['Kuning neon','#eab308','#fef08a'],
+  ['Ungu neon','#a855f7','#d8b4fe'],['Pink neon','#ec4899','#f9a8d4'],
+  ['Oranye neon','#f97316','#fdba74'],['Putih neon','#f8fafc','#ffffff'],
+  ['Emas neon','#d4a017','#fde68a'],['Cyan neon','#06b6d4','#67e8f9'],
+  ['Navy neon','#1e40af','#60a5fa'],['Merah tua','#991b1b','#f87171']
+ ];
+ const grid=document.getElementById('neonColorGrid'), root=document.documentElement;
+ function applyNeon(c,save=true){
+  root.style.setProperty('--neon-a',c[1]);
+  root.style.setProperty('--neon-b',c[2]);
+  root.style.setProperty('--neon-glow',c[1]);
+  document.querySelectorAll('.neon-frame').forEach(el=>{el.classList.remove('neon-off');el.style.setProperty('--neon-a',c[1]);el.style.setProperty('--neon-b',c[2]);el.style.setProperty('--neon-glow',c[1]);});
+  [...grid.querySelectorAll('.theme-choice')].forEach((b,i)=>b.setAttribute('aria-pressed',String(colors[i]===c)));
+  if(save){try{localStorage.setItem('erwinEnglishNeonColor',c[0]);}catch(e){}}
+ }
+ colors.forEach(c=>{
+  const b=document.createElement('button');b.type='button';b.className='theme-choice';
+  b.innerHTML='<span class="theme-swatch" style="background:'+c[1]+'"></span><span>'+c[0]+'</span>';
+  b.addEventListener('click',()=>applyNeon(c));grid.appendChild(b);
+ });
+ try{const saved=localStorage.getItem('erwinEnglishNeonColor');const c=colors.find(x=>x[0]===saved);if(c)applyNeon(c,false);}catch(e){}
+})();
+</script>
+
+</body></html>
